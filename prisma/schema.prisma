@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model auth_nonces {
+  nonce      String?    @db.VarChar(36)
+  customer   String?    @db.VarChar(36)
+  expires_at DateTime?  @db.DateTime(0)
+  customers  customers? @relation(fields: [customer], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_nonces_customers_null_fk")
+
+  @@index([customer], map: "auth_nonces_customers_null_fk")
+  @@ignore
+}
+
+model customers {
+  id                String          @id @unique(map: "customers_pk") @db.VarChar(36)
+  name              String?         @db.VarChar(255)
+  email             String?         @db.VarChar(255)
+  phone             String?         @db.VarChar(18)
+  stripe_customerId String?         @db.VarChar(64)
+  INTERNAL_notes    String?         @db.Text
+  status            String?         @db.VarChar(255)
+  password          String?         @db.VarChar(255)
+  auth_nonces       auth_nonces[]   @ignore
+  events            events[]
+  verifications     verifications[]
+}
+
+model events {
+  id          String     @id @unique(map: "events_pk") @db.VarChar(36)
+  created_at  DateTime   @default(now()) @db.Timestamp(0)
+  edited_at   DateTime   @default(now()) @db.Timestamp(0)
+  owner       String?    @db.VarChar(36)
+  name        String?    @db.VarChar(255)
+  description String?    @db.Text
+  logo        String?    @db.VarChar(255)
+  url         String?    @db.VarChar(255)
+  visibility  String?    @default("UnifyEM.STANDARD") @db.VarChar(255)
+  customers   customers? @relation(fields: [owner], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "events_customers_null_fk")
+
+  @@index([owner], map: "events_customers_null_fk")
+}
+
+model verifications {
+  id          String     @id @db.VarChar(36)
+  customer_id String?    @db.VarChar(36)
+  pin         Int?
+  type        String?    @db.VarChar(36)
+  expires_at  DateTime?  @db.Timestamp(0)
+  customers   customers? @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "table_name_customers_null_fk")
+
+  @@index([customer_id], map: "table_name_customers_null_fk")
+}

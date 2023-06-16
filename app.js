@@ -7,10 +7,6 @@ import cookieParser from 'cookie-parser';
 router.use(express.json());
 router.use(cookieParser());
 
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 // Import routes
 import signup from './routes/signup.js';
 import login from './routes/login.js';
@@ -18,6 +14,7 @@ import debuggers from './routes/debuggers.js';
 import verify from './routes/verify.js';
 import session from './routes/session.js';
 import identicon from './routes/identicon.js';
+import events from './routes/events.js';
 
 router.use('/signup', signup);
 router.use('/login', login);
@@ -25,6 +22,7 @@ router.use('/debuggers', debuggers);
 router.use('/verify', verify);
 router.use('/session', session);
 router.use('/identicon', identicon);
+router.use('/events', events);
 
 app.use(router);
 

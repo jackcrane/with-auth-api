@@ -8,7 +8,9 @@
     "start": "node app.js",
     "protect": "node Onboarding/RunProtection.js",
     "protect-verbose": "node Onboarding/RunProtection.js -v",
-    "onboard": "node Onboarding/CreateTables.js"
+    "onboard": "node Onboarding/CreateTables.js",
+    "spindown": "node Onboarding/Spindown.js",
+    "dump": "node Services/DumpDb.js"
   },
   "keywords": [],
   "author": "",
@@ -27,8 +29,12 @@
     "jazzicon": "^1.5.0",
     "jdenticon": "^3.2.0",
     "mysql2": "^2.3.3",
+    "mysqldump": "^3.2.0",
     "stripe": "^10.16.0",
     "twilio": "^3.83.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^4.8.0"
   }
 }
